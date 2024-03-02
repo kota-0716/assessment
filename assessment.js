@@ -11,38 +11,53 @@ assessmentButton.onclick = () => {
     return;
   }
 
-  // 診断結果表示エリアの作成
+  //  診断結果表示エリアの作成
   resultDivided.innerText = '';
-  const header = document.createElement('h3');
-  header.innerText = '診断結果';
-  resultDivided.appendChild(header);
+
+  // headerDivided の作成
+  const headerDivided = document.createElement('div');
+  headerDivided.setAttribute('class', 'card-header');
+  headerDivided.innerText = '診断結果';
+
+  // bodyDivided の作成
+  const bodyDivided = document.createElement('div');
+  bodyDivided.setAttribute('class', 'card-body');
 
   const paragraph = document.createElement('p');
+  paragraph.setAttribute('class', 'card-text');
   const result = assessment(userName);
   paragraph.innerText = result;
-  resultDivided.appendChild(paragraph);
+  bodyDivided.appendChild(paragraph);
 
-  // ツイートエリアの作成
+  // resultDivided に Bootstrap のスタイルを適用する
+  resultDivided.setAttribute('class', 'card');
+  resultDivided.setAttribute('style', 'max-width: 700px;')
+
+  // headerDivided と bodyDivided を resultDivided に差し込む
+  resultDivided.appendChild(headerDivided);
+  resultDivided.appendChild(bodyDivided);
+
+  // TODO ツイートエリアの作成
   tweetDivided.innerText = '';
   const anchor = document.createElement('a');
-  const hrefValue =
-    'https://twitter.com/intent/tweet?button_hashtag=' +
-    encodeURIComponent('あなたのいいところ') +
-    '&ref_src=twsrc%5Etfw';
-  anchor.setAttribute('href', hrefValue);
+  const hrefvalue = 
+  'https://twitter.com/intent/tweet?button_hashtag=' + 
+  encodeURIComponent('あなたのいいところ') + 
+  '&ref_src=twsrc%5Etfw';
+  anchor.setAttribute('href', hrefvalue);
   anchor.setAttribute('class', 'twitter-hashtag-button');
   anchor.setAttribute('data-text', result);
   anchor.innerText = 'Tweet #あなたのいいところ';
   tweetDivided.appendChild(anchor);
 
   // widgets.js の設定
-  const script = document.createElement('script');
+  const script =document.createElement('script');
   script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
   tweetDivided.appendChild(script);
 };
 
 const answers = [
-  '{userName}のいいところは声です。{userName}の特徴的な声はみなを惹きつけ、心に残ります。',
+  '{userName}のいいところは声です。{userName}の特徴的な声は皆を惹きつけ、心に残ります。',
   '{userName}のいいところはまなざしです。{userName}に見つめられた人は、気になって仕方がないでしょう。',
   '{userName}のいいところは情熱です。{userName}の情熱に周りの人は感化されます。',
   '{userName}のいいところは厳しさです。{userName}の厳しさがものごとをいつも成功に導きます。',
@@ -67,13 +82,13 @@ const answers = [
  */
 function assessment(userName) {
   // 全文字のコード番号を取得してそれを足し合わせる
-  let sumOfcharCode = 0;
+  let sumOfCharCode = 0;
   for (let i = 0; i < userName.length; i++) {
-    sumOfcharCode = sumOfcharCode + userName.charCodeAt(i);
+    sumOfCharCode = sumOfCharCode + userName.charCodeAt(i);
   }
 
   // 文字のコード番号の合計を回答の数で割って添字の数値を求める
-  const index = sumOfcharCode % answers.length;
+  const index = sumOfCharCode % answers.length;
   let result = answers[index];
 
   result = result.replaceAll('{userName}', userName);
